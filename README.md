@@ -8,6 +8,7 @@ Invoke Claude from any app via hotkey. Type a prompt, get the response inserted 
 |--------|-------------|
 | `Ctrl+Space` | Text-only prompt |
 | `Ctrl+Shift+Space` | Prompt with screenshot of current screen |
+| `Ctrl+Option+Space` | **True autocomplete** - takes screenshot, finds your cursor, and types what you should say next (no prompt needed) |
 
 ## Prerequisites
 
@@ -69,6 +70,7 @@ Invoke Claude from any app via hotkey. Type a prompt, get the response inserted 
 - **Code help**: `Ctrl+Space`, "python function to reverse a string"
 - **Screenshot context**: `Ctrl+Shift+Space`, "what error is shown?"
 - **Writing**: `Ctrl+Space`, "email declining a meeting politely"
+- **True autocomplete**: In a chat, with cursor in reply field, press `Ctrl+Option+Space` - Claude sees your screen, reads the conversation, and types a response as you
 
 ## Configuration
 
