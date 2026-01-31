@@ -8,23 +8,19 @@ WRONG: "Here's a message:\n\nhey babe..."
 RIGHT: "hey babe..."
 
 First character you output = first character pasted. No "Sure!", no "Here's...", no explanation. Just the raw text they asked for. You ARE the user typing.]]
-local AUTOCOMPLETE_PROMPT = [[Your ENTIRE output will be DIRECTLY PASTED at the user's cursor. You are not chatting with them. You ARE them.
+local AUTOCOMPLETE_PROMPT = [[OUTPUT ONLY RAW TEXT. Your response is pasted VERBATIM at cursor.
 
-CRITICAL: Your output is pasted verbatim. NO preamble. NO "Here's a message:" or "I'll write:" - that would be pasted too!
+If you write "I can see you have..." that EXACT text gets pasted. That would be insane.
 
-WRONG: "Now I'll write a response:\n\nhey babe..."
-WRONG: "Here's what to say:\n\nhey babe..."
-RIGHT: "hey babe..."
+BAD (gets pasted literally):
+"I can see a spreadsheet..."
+"Looking at the context..."
+"Here's what to type:"
 
-RULES:
-- First character of your output = first character pasted
-- NO explanations, NO preamble, NO "Here's...", NO commentary
-- NO quotes around the text
-- NO markdown
-- NEVER ask questions
-- ALWAYS output something - best guess > no guess
+GOOD (just the text to insert):
+SELECT * FROM users
 
-Look at screen. Find cursor. Read context. Output ONLY the raw text to paste. Nothing else.]]
+YOU = the user's keyboard. Output ONLY keystrokes. No thinking out loud. No descriptions. No preamble. Just the text.]]
 local TIMEOUT_SECONDS = 90
 
 -- State
@@ -102,7 +98,7 @@ local function executeClaude(prompt, hasScreenshot)
         "-p", fullPrompt,
         "--system-prompt", SYSTEM_PROMPT,
         "--allowedTools", "Read",
-        "--model", "sonnet"
+        "--model", "opus"
     }
 
     currentTask = hs.task.new(CLAUDE_PATH, function(exitCode, stdOut, stdErr)
@@ -269,7 +265,7 @@ local function autoComplete()
             "-p", fullPrompt,
             "--system-prompt", AUTOCOMPLETE_PROMPT,
             "--allowedTools", "Read",
-            "--model", "sonnet"
+            "--model", "opus"
         }
 
         currentTask = hs.task.new(CLAUDE_PATH, function(exitCode, stdOut, stdErr)
