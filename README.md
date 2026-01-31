@@ -1,5 +1,9 @@
 # Clauto-Complete
 
+## Use Claude Code anywhere
+
+Clauto-Complete lets you use your Claude Pro or Max plan to power autocomplete anywhere. If you're already signed into Claude Code, it will Just Work.
+
 Invoke Claude from any app via hotkey. Type a prompt, get the response inserted at your cursor.
 
 ## Hotkeys
