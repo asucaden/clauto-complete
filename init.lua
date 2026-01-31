@@ -2,25 +2,32 @@
 -- Invoke Claude from any app via hotkey, type a prompt, get response at cursor
 
 local CLAUDE_PATH = "/Users/cadenmidkiff/.local/bin/claude"
-local SYSTEM_PROMPT = [[Your ENTIRE output is pasted directly at the user's cursor. NO preamble.
+local SYSTEM_PROMPT = [[You help users write text that gets pasted at their cursor. You ARE them typing.
 
-WRONG: "Here's a message:\n\nhey babe..."
-RIGHT: "hey babe..."
+Put your response between <OUTPUT> tags. ONLY the content inside tags gets pasted.
 
-First character you output = first character pasted. No "Sure!", no "Here's...", no explanation. Just the raw text they asked for. You ARE the user typing.]]
-local AUTOCOMPLETE_PROMPT = [[OUTPUT ONLY RAW TEXT. Your response is pasted VERBATIM at cursor.
+Example - user asks "write a sick burn":
+I'll write something sassy.
+<OUTPUT>wow didn't know we were doing amateur hour today</OUTPUT>
 
-If you write "I can see you have..." that EXACT text gets pasted. That would be insane.
+The user only sees: wow didn't know we were doing amateur hour today]]
+local AUTOCOMPLETE_PROMPT = [[Look at the user's screen. Find their cursor. Write what they should type next.
 
-BAD (gets pasted literally):
-"I can see a spreadsheet..."
-"Looking at the context..."
-"Here's what to type:"
+Put ONLY the text to paste between <OUTPUT> tags. You can think/reason outside the tags.
 
-GOOD (just the text to insert):
-SELECT * FROM users
+Example - user is in a chat replying to "wanna hang tomorrow?":
+I can see they're in iMessage. I'll write a casual response.
+<OUTPUT>yea im down, what time?</OUTPUT>
 
-YOU = the user's keyboard. Output ONLY keystrokes. No thinking out loud. No descriptions. No preamble. Just the text.]]
+Example - user is coding and cursor is after "def ":
+Looks like Python. They need a function name and params.
+<OUTPUT>calculate_total(items, tax_rate):</OUTPUT>
+
+RULES:
+- ALWAYS include <OUTPUT> tags
+- Best guess > no guess
+- You ARE the user typing
+- Content inside tags = what gets pasted]]
 local TIMEOUT_SECONDS = 90
 
 -- State
@@ -49,10 +56,29 @@ local function killCurrentTask()
     end
 end
 
+-- Extract content between <OUTPUT> tags (case-insensitive)
+local function extractOutput(text)
+    -- Case-insensitive pattern for <output>...</output>
+    local lower = text:lower()
+    local startTag = lower:find("<output>")
+    local endTag = lower:find("</output>")
+
+    if startTag and endTag and endTag > startTag then
+        -- Extract using positions from lowercase search, but from original text
+        local content = text:sub(startTag + 8, endTag - 1)
+        -- Trim whitespace
+        return content:gsub("^%s*(.-)%s*$", "%1")
+    end
+
+    -- Fallback: return trimmed original if no tags found
+    return text:gsub("^%s*(.-)%s*$", "%1")
+end
+
 -- Paste text at cursor using clipboard
 local function pasteAtCursor(text)
+    local extracted = extractOutput(text)
     originalClipboard = hs.pasteboard.getContents()
-    hs.pasteboard.setContents(text)
+    hs.pasteboard.setContents(extracted)
     -- Small delay to let focus return to original app
     hs.timer.doAfter(0.05, function()
         hs.eventtap.keyStroke({"cmd"}, "v")
