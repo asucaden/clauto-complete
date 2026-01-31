@@ -1,0 +1,113 @@
+# Clauto-Complete
+
+Invoke Claude from any app via hotkey. Type a prompt, get the response inserted at your cursor.
+
+## Hotkeys
+
+| Hotkey | Description |
+|--------|-------------|
+| `Ctrl+Space` | Text-only prompt |
+| `Ctrl+Shift+Space` | Prompt with screenshot of current screen |
+
+## Prerequisites
+
+- macOS
+- [Hammerspoon](https://www.hammerspoon.org/) - `brew install --cask hammerspoon`
+- [Claude CLI](https://docs.anthropic.com/en/docs/claude-cli) - installed and authenticated
+
+## Installation
+
+1. **Install Hammerspoon** (if not already installed):
+   ```bash
+   brew install --cask hammerspoon
+   ```
+
+2. **Clone this repo**:
+   ```bash
+   git clone https://github.com/asucaden/clauto-complete.git
+   cd clauto-complete
+   ```
+
+3. **Symlink or copy init.lua**:
+   ```bash
+   # Option A: Symlink (recommended - updates automatically with git pull)
+   ln -sf "$(pwd)/init.lua" ~/.hammerspoon/init.lua
+
+   # Option B: Copy
+   cp init.lua ~/.hammerspoon/init.lua
+   ```
+
+4. **Update Claude path** (if needed):
+
+   Open `~/.hammerspoon/init.lua` and update `CLAUDE_PATH` to match your Claude CLI location:
+   ```lua
+   local CLAUDE_PATH = "/path/to/your/claude"
+   ```
+
+   Find your Claude path with: `which claude`
+
+5. **Launch Hammerspoon**:
+   - Open Hammerspoon from Applications or Spotlight
+   - Grant Accessibility permissions when prompted (required for hotkeys and pasting)
+   - You should see "Clauto-Complete loaded" alert
+
+6. **Reload config** (after any changes):
+   - Click the Hammerspoon menu bar icon > Reload Config
+   - Or press `Cmd+Shift+R` while Hammerspoon console is focused
+
+## Usage
+
+1. Place your cursor in any text field (Notes, VS Code, browser, etc.)
+2. Press `Ctrl+Space` (or `Ctrl+Shift+Space` for screenshot)
+3. Type your prompt in the popup
+4. Press Enter
+5. Wait for Claude's response to be inserted at your cursor
+
+## Examples
+
+- **Quick edits**: Select text, `Ctrl+Space`, "fix grammar"
+- **Code help**: `Ctrl+Space`, "python function to reverse a string"
+- **Screenshot context**: `Ctrl+Shift+Space`, "what error is shown?"
+- **Writing**: `Ctrl+Space`, "email declining a meeting politely"
+
+## Configuration
+
+Edit `~/.hammerspoon/init.lua` to customize:
+
+```lua
+local CLAUDE_PATH = "/path/to/claude"     -- Claude CLI location
+local SYSTEM_PROMPT = "Be concise..."      -- System prompt for Claude
+local TIMEOUT_SECONDS = 60                 -- Request timeout
+```
+
+## Troubleshooting
+
+### "Clauto-Complete loaded" doesn't appear
+- Make sure Hammerspoon is running (look for icon in menu bar)
+- Check Hammerspoon console for errors (click menu bar icon > Console)
+
+### Hotkeys don't work
+- Grant Accessibility permissions: System Settings > Privacy & Security > Accessibility > Enable Hammerspoon
+- Check for hotkey conflicts with other apps
+
+### Claude errors
+- Verify Claude CLI is authenticated: run `claude` in terminal
+- Check the path in init.lua matches: `which claude`
+
+### Response not pasting
+- Some apps block programmatic paste - try a different app
+- Make sure cursor is in an editable text field
+
+## How It Works
+
+1. Hotkey triggers Hammerspoon
+2. (Optional) Screenshot captured to temp file
+3. Spotlight-like chooser popup appears
+4. User types prompt and presses Enter
+5. Claude CLI executed asynchronously with prompt + screenshot
+6. Response inserted via clipboard + Cmd+V
+7. Original clipboard restored after 0.5s
+
+## License
+
+MIT
