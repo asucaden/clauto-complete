@@ -18,43 +18,39 @@ Invoke Claude from any app via hotkey. Type a prompt, get the response inserted 
 
 ## Installation
 
-1. **Install Hammerspoon** (if not already installed):
-   ```bash
-   brew install --cask hammerspoon
-   ```
+### Quick Install
+```bash
+brew install --cask hammerspoon
+git clone https://github.com/asucaden/clauto-complete.git
+cd clauto-complete
+./install.sh
+```
 
-2. **Clone this repo**:
+The install script will:
+- Symlink `init.lua` to `~/.hammerspoon/`
+- Auto-detect your Claude CLI path and update the config
+
+### Manual Install
+
+1. **Install Hammerspoon**: `brew install --cask hammerspoon`
+
+2. **Install Claude CLI**: https://docs.anthropic.com/en/docs/claude-cli
+
+3. **Clone and symlink**:
    ```bash
    git clone https://github.com/asucaden/clauto-complete.git
    cd clauto-complete
-   ```
-
-3. **Symlink or copy init.lua**:
-   ```bash
-   # Option A: Symlink (recommended - updates automatically with git pull)
    ln -sf "$(pwd)/init.lua" ~/.hammerspoon/init.lua
-
-   # Option B: Copy
-   cp init.lua ~/.hammerspoon/init.lua
    ```
 
-4. **Update Claude path** (if needed):
-
-   Open `~/.hammerspoon/init.lua` and update `CLAUDE_PATH` to match your Claude CLI location:
+4. **Update Claude path** in `~/.hammerspoon/init.lua`:
    ```lua
-   local CLAUDE_PATH = "/path/to/your/claude"
+   local CLAUDE_PATH = "/path/to/claude"  -- run: which claude
    ```
 
-   Find your Claude path with: `which claude`
+5. **Launch Hammerspoon** and grant Accessibility permissions when prompted
 
-5. **Launch Hammerspoon**:
-   - Open Hammerspoon from Applications or Spotlight
-   - Grant Accessibility permissions when prompted (required for hotkeys and pasting)
-   - You should see "Clauto-Complete loaded" alert
-
-6. **Reload config** (after any changes):
-   - Click the Hammerspoon menu bar icon > Reload Config
-   - Or press `Cmd+Shift+R` while Hammerspoon console is focused
+6. **Reload config**: Click Hammerspoon menu bar icon > Reload Config
 
 ## Usage
 

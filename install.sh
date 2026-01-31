@@ -21,22 +21,18 @@ fi
 ln -sf "$SCRIPT_DIR/init.lua" "$HAMMERSPOON_DIR/init.lua"
 echo "Symlinked init.lua to $HAMMERSPOON_DIR/"
 
-# Check if Claude CLI is installed
+# Check if Claude CLI is installed and update path
 CLAUDE_PATH=$(which claude 2>/dev/null || echo "")
 if [ -z "$CLAUDE_PATH" ]; then
     echo ""
     echo "Warning: Claude CLI not found in PATH"
-    echo "Install it from: https://docs.anthropic.com/en/docs/claude-cli"
-    echo "Then update CLAUDE_PATH in init.lua"
+    echo "Install it: https://docs.anthropic.com/en/docs/claude-cli"
+    echo "Then update CLAUDE_PATH in ~/.hammerspoon/init.lua"
 else
     echo "Found Claude CLI at: $CLAUDE_PATH"
-
-    # Update path in init.lua if different from default
-    DEFAULT_PATH="/Users/cadenmidkiff/.local/bin/claude"
-    if [ "$CLAUDE_PATH" != "$DEFAULT_PATH" ]; then
-        echo "Updating CLAUDE_PATH in init.lua..."
-        sed -i '' "s|$DEFAULT_PATH|$CLAUDE_PATH|g" "$SCRIPT_DIR/init.lua"
-    fi
+    echo "Updating CLAUDE_PATH in init.lua..."
+    # Replace the CLAUDE_PATH line with the detected path
+    sed -i '' "s|^local CLAUDE_PATH = .*|local CLAUDE_PATH = \"$CLAUDE_PATH\"|" "$SCRIPT_DIR/init.lua"
 fi
 
 # Check if Hammerspoon is installed
