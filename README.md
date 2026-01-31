@@ -98,13 +98,23 @@ local TIMEOUT_SECONDS = 60                 -- Request timeout
 
 ## How It Works
 
+This tool uses your existing **Claude Code subscription** (Claude Max, Pro, or Team plan) via the `claude -p` command - the same CLI you use for coding.
+
+**The `claude -p` flag** runs Claude in "print mode" - it takes a prompt, returns a response, and exits. No interactive session, perfect for automation.
+
+**Flow:**
 1. Hotkey triggers Hammerspoon
 2. (Optional) Screenshot captured to temp file
-3. Spotlight-like chooser popup appears
-4. User types prompt and presses Enter
-5. Claude CLI executed asynchronously with prompt + screenshot
-6. Response inserted via clipboard + Cmd+V
-7. Original clipboard restored after 0.5s
+3. Spotlight-like popup appears for your prompt
+4. Runs: `claude -p "your prompt" --system-prompt "..." --allowedTools "Read"`
+5. Response inserted at cursor via clipboard + Cmd+V
+6. Original clipboard restored
+
+**Why this is cool:**
+- Uses your existing Claude Code subscription - no API keys needed
+- Screenshots work because Claude Code can read local files
+- Same model (Sonnet) you use for coding, now available everywhere
+- No extra cost beyond your subscription
 
 ## License
 
